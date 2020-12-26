@@ -2,7 +2,6 @@
 #include "Studentai.h"
 int main()
 {
-	duomenys D;
 	string vardas = "";
 	string pavarde = "";
 	string q;
@@ -10,10 +9,11 @@ int main()
 	int ilgis = 0;
 	float galbal;
 	float med;
-	vector<int>ndp;
-	vector<Studentai>gaidz;
+
+
 	auto start = high_resolution_clock::now();
-	
+	duomenys D;
+
 	ifstream klasiokai;
 	klasiokai.open("studentai10.txt");
 	ofstream mldc;
@@ -32,8 +32,9 @@ int main()
 					break;
 				}
 				ilgis ++;
+				D.dadek_ilgis(ilgis);
 			}
-			
+
 
 
 
@@ -42,26 +43,29 @@ int main()
 			while (!klasiokai.eof())
 			{
 				klasiokai >> vardas >> pavarde;
+				D.dadek_vardas(vardas);
+				D.dadek_pavarde(pavarde);
 				int xxx;
-				for (int i = 1; i <= ilgis; i++)
+				for (int i = 1; i <= D.ilgiss(); i++)
 				{
 					klasiokai >> xxx;
-					ndp.push_back(xxx);
+					D.dadek_ndp(xxx);
 
 				}
 				klasiokai >> egzp;
+				D.dadek_egzp(egzp);
 				D.prarusiuok();
-				galbal = (double)accumulate(ndp.begin(), ndp.end(), 0) / ndp.size() * 0.4 + egzp * 0.6;
+				D.suskaiciuok_galbal();
 				if (D.lyginis())
 				{
-					med = (double)ndp.size() / 2;
+					med = (double)D.prasau_ndp(D.prasau_ndp_size() / 2);
 				}
 				else
 				{
-					med = (double)(((ndp.size() - 1) / 2) + (ndp.size() / 2)) / 2.0;
+					med = (double)(D.prasau_ndp((D.prasau_ndp_size() - 1) / 2) + D.prasau_ndp(D.prasau_ndp_size() / 2)) / 2.0;
 				}
 				D.dadek_med(med);
-				ndp.clear();
+				D.trynk_ndp();
 				if (D.galball() < 5)
 				{
 					Studentai(vardas, pavarde, galbal, med);
@@ -69,7 +73,7 @@ int main()
 				}
 				else
 				{
-					mldc << setfill(' ') << setw(17) << vardas << setw(20) << pavarde << setw(14) << setprecision(2) << fixed << galbal << setw(31) << setprecision(2) << fixed << med << endl;
+					mldc << setfill(' ') << setw(17) << D.vardass() << setw(20) << D.pavardee() << setw(14) << setprecision(2) << fixed << D.galball() << setw(31) << setprecision(2) << fixed << D.medd() << endl;
 				}
 			}
 
@@ -77,9 +81,9 @@ int main()
 			cout << "skirstymas i viena grupe ir irasymas vienos grupe truko: " << di.count() << " " << endl;
 			rasom(D.prasau_gaidziu());
 			D.trynk_gaidziu();
-			
+
 		}
-		
+
 	mldc.close();
 	klasiokai.close();
 
@@ -89,4 +93,4 @@ int main()
 
 
 	return 0;
-}
+} 
